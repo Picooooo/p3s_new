@@ -22,6 +22,7 @@ from td3.replay_buffers import SimpleReplayBuffer
 from td3.value_functions import NNQFunction, NNVFunction
 from variants_p3s import parse_domain_and_task, get_variants
 from td3.actors.actors import Actor
+from plot import plot_all_experiments
 
 ENVIRONMENTS = {
     'ant': {
@@ -164,7 +165,7 @@ def launch_experiments(variant_generator, args):
     print('Launching {} experiments.'.format(num_experiments))
 
     for i, variant in enumerate(variants):
-        print("Experiment: {}/{}".format(i, num_experiments))
+        print("Experiment: {}/{}".format(i+1, num_experiments))
         run_params = variant['run_params']
         algo_params = variant['algorithm_params']
 
@@ -197,7 +198,7 @@ def main():
 
     variant_generator = get_variants(domain=domain, task=task, policy=args.policy)
     launch_experiments(variant_generator, args)
-
+    plot_all_experiments(args.log_dir, args.env)
 
 def _init_placeholder(env):
     Da = env.action_space.flat_dim
