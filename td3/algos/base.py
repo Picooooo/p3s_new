@@ -168,6 +168,7 @@ class MARLAlgorithm(Algorithm):
         if self._eval_n_episodes < 1:
             return
 
+        return_average = 0
         for i, (env, actor) in enumerate(zip(self._eval_env, self._arr_actor)):
             policy = actor.policy
             with policy.deterministic(self._eval_deterministic):
@@ -177,7 +178,7 @@ class MARLAlgorithm(Algorithm):
 
             total_returns = [path['rewards'].sum() for path in paths]
             episode_lengths = [len(p['rewards']) for p in paths]
-
+            return_average += np.mean(total_returns)/4
             if self._eval_n_episodes > 1:
                 logger.record_tabular('return-average/{i}'.format(i=i), np.mean(total_returns))
                 logger.record_tabular('episode-length-avg/{i}'.format(i=i), np.mean(episode_lengths))
@@ -186,7 +187,8 @@ class MARLAlgorithm(Algorithm):
                 logger.record_tabular('episode-length-avg/{i}'.format(i=i), np.mean(episode_lengths))
 
             env.log_diagnostics(paths)
-
+        
+        logger.record_tabular('return-average', return_average)
 
         iteration = epoch*self._epoch_length
         # batch = self.sampler.random_batch()
