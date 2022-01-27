@@ -15,7 +15,7 @@ def plot_all_experiments(log_folder, env_name):
     num_experiments = len(list_folder)
     for i in range(num_experiments):
         newpath = log_folder + '/' + list_folder[i] + '/progress.csv'
-        df.insert(i,i,pd.read_csv(newpath)['return-average'][:200])
+        df.insert(i,i,pd.read_csv(newpath)['return-average'][:1000])
 
     mean = []
     std = []
