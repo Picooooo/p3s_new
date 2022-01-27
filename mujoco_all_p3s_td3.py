@@ -81,8 +81,8 @@ def parse_args():
     env_name = args.env
     if 'delayed' in args.env:
         env_name = env_name + '_' + str(DELAY_FREQ)
-    args.log_dir = os.path.abspath(os.path.join(os.path.dirname(os.path.realpath(__file__)), '..', 'log', env_name, 'P3S-TD3'))
-
+    #args.log_dir = os.path.abspath(os.path.join(os.path.dirname(os.path.realpath(__file__)), '..', 'log', env_name, 'P3S-TD3'))
+    args.log_dir = "/results/" + env_name + "/"
     return args
 
 def run_experiment(variant):
