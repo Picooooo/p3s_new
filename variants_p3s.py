@@ -119,7 +119,7 @@ ALGORITHM_PARAMS_BASE = {
     'tau': 0.005,
     'num_actors':4,
     'num_q':2,
-    'beta':0.5,
+    'beta':[0.5,0.5,0.5,0.5],
     'with_best':True,
     'reparameterize':True,
     'best_update_interval':1, # 1 means M=250

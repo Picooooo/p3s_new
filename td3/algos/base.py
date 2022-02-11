@@ -70,7 +70,7 @@ class MARLAlgorithm(Algorithm):
         self._best_actor_num = 0
         self._num_iter_select_best = 1
         self._with_best = False
-        self._beta_t = 0
+        self._beta_t = [0,0,0,0]
         self._best_flag = np.array([])
 
         self._save_iter_num = 100000

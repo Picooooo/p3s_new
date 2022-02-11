@@ -213,7 +213,7 @@ def _init_placeholder(env):
     rewards_ph = get_placeholder(name='rewards', dtype=tf.float32,shape=(None,))
     terminals_ph = get_placeholder(name='terminals', dtype=tf.float32,shape=(None,))
     not_best_ph = get_placeholder(name='not_best', dtype=tf.float32,shape=(num_actors,))
-    beta_ph = get_placeholder(name='beta', dtype=tf.float32,shape=None)
+    beta_ph = get_placeholder(name='beta', dtype=tf.float32,shape=(num_actors,))
 
     d = {
         'iteration_ph': iteration_ph,

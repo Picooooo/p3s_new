@@ -81,7 +81,8 @@ class P3S_TD3(MARLAlgorithm, Serializable):
             dict_ph,
             arr_initial_exploration_policy,
             with_best = False,
-            initial_beta_t = 1,
+            #initial_beta_t = 1,
+            initial_beta_t = [1,1,1,1],
             plotter=None,
             specific_type=0,
 
@@ -260,11 +261,11 @@ class P3S_TD3(MARLAlgorithm, Serializable):
             qf_t = actor.arr_qf[0].get_output_for(self._dict_ph['observations_ph'], actor.policy.action_t, reuse=tf.AUTO_REUSE)
 
         actor.oldkl = actor.policy.dist(actor.oldpolicy)
-
+        best_actor_num = self._best_actor_num
         if self._with_best:
             actor.bestkl = actor.policy.dist(self._best_actor.policy)
             not_best_flag = tf.reduce_sum(self._dict_ph['not_best_ph'] * tf.one_hot(actor.actor_num, self._num_actor))
-            policy_kl_loss = tf.reduce_mean(-qf_t) + not_best_flag * self._dict_ph['beta_ph'] * tf.reduce_mean(actor.bestkl)
+            policy_kl_loss = tf.reduce_mean(-qf_t) + not_best_flag * self._dict_ph['beta_ph'][best_actor_num] * tf.reduce_mean(actor.bestkl)
         else:
             policy_kl_loss = tf.reduce_mean(-qf_t)
 
@@ -403,12 +404,15 @@ class P3S_TD3(MARLAlgorithm, Serializable):
 
         # D_change = average of mean_old
         # D_best  = average of mean_best
-        if np.mean(mean_best) > max(self._target_ratio * np.mean(mean_old), self._target_range) * 1.5:
-            if self._beta_t < 1000:
-                self._beta_t = self._beta_t * 2
-        if np.mean(mean_best) < max(self._target_ratio * np.mean(mean_old), self._target_range) / 1.5:
-            if self._beta_t > 1/1000:
-                self._beta_t = self._beta_t / 2
+        for i in range(self._num_actor):
+            if i == self._best_actor_num:
+                continue
+            if np.mean(mean_best) > max(self._target_ratio * np.mean(mean_old), self._target_range) * 1.5:
+                if self._beta_t[i] < 1000:
+                    self._beta_t[i] = self._beta_t[i] * 2
+            if np.mean(mean_best) < max(self._target_ratio * np.mean(mean_old), self._target_range) / 1.5:
+                if self._beta_t[i] > 1/1000:
+                    self._beta_t[i] = self._beta_t[i] / 2
 
         print("next beta_t : ", self._beta_t)
 
